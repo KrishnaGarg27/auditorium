@@ -48,6 +48,9 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...your-service-role-key
 # Required: Cloudinary credentials
 CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@CLOUD_NAME
 
+# Optional: CORS origin for production (default: * allows all)
+# CORS_ORIGIN=https://your-frontend.vercel.app
+
 # Optional: Backend port (default: 3001)
 # PORT=3001
 ```
@@ -351,9 +354,10 @@ The backend needs no persistent volume — all data is in Supabase + Cloudinary.
 3. Set the **build command**: `npm run build`
 4. Set the **output directory**: `dist`
 5. Add the environment variable:
-   - `VITE_API_URL` — the Railway (or Render) backend URL from step 4, e.g. `https://auditorium-backend-production.up.railway.app`
-6. Update the Vite config so the dev proxy and production API calls both resolve correctly. In `frontend/vite.config.ts`, the proxy target should use `VITE_API_URL` in production while keeping `http://localhost:3001` for local dev.
-7. Deploy. Vercel will give you a production URL for the frontend.
+   - `VITE_API_URL` — the Railway (or Render) backend URL from step 3, e.g. `https://auditorium-backend-production.up.railway.app`
+6. Deploy. Vercel will give you a production URL for the frontend.
+
+The frontend's `api.ts` reads `VITE_API_URL` at build time. In dev mode (no env var set), it uses relative `/api` paths which the Vite dev server proxies to `localhost:3001`.
 
 ### 5. Environment Variables Reference
 

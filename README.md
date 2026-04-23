@@ -2,6 +2,8 @@
 
 An AI-powered application that transforms written stories into fully produced, multi-layered audio dramas. Upload a story or describe one via a prompt, pick a cinematic style, and the engine analyzes, dramatizes, voices, scores, and mixes everything into episode-based audio you can stream from a built-in player UI.
 
+Built with [AWS Kiro](https://kiro.dev)'s spec-driven development workflow and powered by [ElevenLabs](https://elevenlabs.io) for voice, sound effects, and music generation.
+
 ## How It Works
 
 The engine runs a **multi-round LLM pipeline** followed by **ElevenLabs audio generation** and **FFmpeg mixing**:
@@ -15,7 +17,7 @@ The engine runs a **multi-round LLM pipeline** followed by **ElevenLabs audio ge
 7. **Voice Assignment** — Each character is matched to a distinct ElevenLabs voice based on age, gender, personality, and style aesthetics. A dedicated narrator voice is also assigned.
 8. **Audio Generation** — ElevenLabs APIs produce TTS speech (`eleven_flash_v2_5` model), sound effects, and music tracks. Results are cached (SHA-256 keyed) and retried with exponential backoff. All generated audio files are probed via FFprobe to capture actual durations.
 9. **Audio Mixing** — FFmpeg combines dialogue, SFX, and music per scene using sidechain compression, presence-range EQ, and a final limiter for broadcast-quality output. Context-aware pacing gaps are inserted between dialogue lines. Scenes are concatenated into episode files (MP3 44.1 kHz 192 kbps).
-10. **Thumbnail Generation** — A 640×360 px cover image is rendered server-side using a Node.js canvas library with style-specific gradient palettes.
+10. **Thumbnail Generation** — AI-generated title cards via Replicate (recraft-v3), with a canvas-based fallback using style-specific gradient palettes.
 
 ## Features
 
@@ -48,7 +50,7 @@ A toggle that lets the Scene Adapter make more liberal creative choices:
 
 ### Scene-by-Scene Context Passing
 
-Round 3 processes one scene at a time. Each LLM call receives the previous scene's full output as context, ensuring continuity in tone, character voice, and narrative flow without blowing up token limits.
+Round 3 processes one scene at a time. Each LLM call receives the previous scene's output as context, ensuring continuity in tone, character voice, and narrative flow without blowing up token limits.
 
 ### Episodic Organization with Recaps
 
@@ -59,18 +61,18 @@ Longer stories are automatically split into episodes at narrative arc boundaries
 A React-based streaming-platform-style interface with:
 - Library view with thumbnails, style badges, and episode counts
 - Episode list with titles, synopses, and durations
-- Persistent player bar with play/pause, ±15s skip, seekable progress bar
+- Persistent player bar with play/pause, ±15s skip, seekable progress bar, playback speed control, and dismiss button
 - Auto-advance to next episode
 - Playback position persistence via `localStorage`
 - Real-time pipeline progress display with granular stage details
 
 ### Audio Generation Details
 
-- **TTS**: ElevenLabs `textToSpeech.convert()` with `eleven_flash_v2_5` model. Per-character voice settings (stability, similarity boost, style, speed) tuned per drama style.
+- **TTS**: ElevenLabs `textToSpeech.convert()` with `eleven_flash_v2_5` model. Per-character voice settings (stability, similarity boost, style, speed) tuned per drama style. Per-line expression modulation adjusts voice settings based on dialogue emotion tags.
 - **Sound Effects**: ElevenLabs `textToSoundEffects.convert()` with prompt from SFX cue description. Ambient SFX use `loop: true`. Default `promptInfluence: 0.7`.
 - **Music**: ElevenLabs `music.compose()` with mood/style prompt. Underscore cues use `forceInstrumental: true`.
-- **Duration Probing**: All generated audio files (speech, SFX, music) are probed via FFprobe to capture actual file duration in milliseconds. This replaced hardcoded durations and fixed garbled mixing caused by incorrect timing.
-- **Caching**: SHA-256 hash of (endpoint + params) as cache key. Checked before every API call.
+- **Duration Probing**: All generated audio files (speech, SFX, music) are probed via FFprobe to capture actual file duration in milliseconds.
+- **Caching**: SHA-256 hash of (endpoint + params) as cache key. Checked before every API call. Cache files are cleaned up after Cloudinary upload.
 - **Retry**: Up to 3 retries with exponential backoff (1s → 2s → 4s). Immediate failure on 401/422. Respects 429 `Retry-After`.
 
 ### Audio Mixing Details
@@ -95,16 +97,14 @@ The default implementation uses OpenAI GPT-4.1 via the `openai` npm package. The
 
 ## Data Storage
 
-Drama metadata is persisted in Supabase Postgres. Audio files and thumbnails are stored in Cloudinary.
+All persistent data lives in cloud services — the backend is stateless.
 
 | Data | Service | Details |
 |---|---|---|
 | Dramas & episodes | Supabase Postgres | Schema in `backend/supabase-schema.sql`. Row Level Security enabled; backend uses the service role key. |
 | Thumbnails | Cloudinary | Uploaded as images. URLs stored in the `thumbnail_url` column on `dramas`. |
-| Episode audio | Cloudinary | Uploaded as video/audio resources. URLs stored in the `audio_url` column on `episodes`. |
-| TTS cache | Local `cache/` dir | Ephemeral — used during pipeline runs to avoid re-generating identical TTS. Not required to persist across deploys. |
-
-The backend reads `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and `CLOUDINARY_URL` from environment variables. See `setup.md` for the full environment variables reference.
+| Episode audio | Cloudinary | Uploaded as raw resources. URLs stored in the `audio_url` column on `episodes`. |
+| TTS cache | Local `cache/` dir | Ephemeral — used during pipeline runs to avoid re-generating identical TTS. Cleaned up after each pipeline run. |
 
 ## Tech Stack
 
@@ -119,9 +119,10 @@ The backend reads `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, and `CLOUDINARY_U
 | Audio Mixing | FFmpeg via `fluent-ffmpeg` + `@ffmpeg-installer/ffmpeg` (bundled) |
 | Audio Probing | FFprobe via `@ffprobe-installer/ffprobe` (bundled) |
 | File Parsing | `pdf-parse`, `epub2` |
-| Thumbnails | `canvas` (Node.js) |
+| Thumbnails | Replicate (recraft-v3) with `canvas` (Node.js) fallback |
 | Testing | Vitest, fast-check (property-based testing) |
 | Monorepo | npm workspaces |
+| Development | [AWS Kiro](https://kiro.dev) — spec-driven development |
 
 ## Project Structure
 
@@ -133,18 +134,17 @@ auditorium/
 │   │   ├── api/               # Express REST routes
 │   │   ├── audio-generator/   # ElevenLabs TTS, SFX, Music + caching + retry + probe
 │   │   ├── audio-mixer/       # FFmpeg scene mixing + episode concatenation
-│   │   ├── db/                # Supabase + Cloudinary (connection, dramaRepository, fileStorage, cloudinaryClient)
+│   │   ├── db/                # Supabase + Cloudinary (connection, repository, fileStorage)
 │   │   ├── errors/            # StoryIngestionError, PipelineStageError
 │   │   ├── ingestion/         # File upload + prompt-based story generation
 │   │   ├── pipeline/          # Pipeline orchestrator (all 10 stages)
 │   │   ├── scene-adapter/     # Round 3 — scene-by-scene combined adaptation
-│   │   ├── thumbnail/         # Canvas-based thumbnail generation
+│   │   ├── thumbnail/         # AI + canvas thumbnail generation
 │   │   ├── types/             # All TypeScript type definitions
 │   │   ├── voice-mapper/      # Character → ElevenLabs voice assignment
-│   │   └── index.ts           # Express server entry point + DB init
-│   ├── scripts/               # Standalone test scripts (LLM, TTS, SFX, music, mixing)
+│   │   └── index.ts           # Express server entry point
+│   ├── scripts/               # Dev test scripts (LLM, TTS, SFX, music, mixing)
 │   └── package.json
-├── cache/                     # TTS cache (gitignored, ephemeral)
 ├── frontend/
 │   ├── src/
 │   │   ├── components/        # React UI components
@@ -166,6 +166,10 @@ auditorium/
 | `GET` | `/api/dramas/:id/status` | Pipeline status with granular stage detail |
 | `GET` | `/api/dramas/:id/episodes/:epId/audio` | Stream episode audio |
 | `GET` | `/api/styles` | List all 10 drama styles with preset summaries |
+
+## Built With
+
+This project was developed using [AWS Kiro](https://kiro.dev)'s spec-driven development methodology. The full requirements, design documents, and implementation task lists are in `.kiro/specs/`. Audio generation is powered by [ElevenLabs](https://elevenlabs.io) — TTS voices, sound effects, and music are all generated through their API.
 
 ## License
 
