@@ -1,0 +1,244 @@
+/* ─── Full-screen landing page ─── */
+.home {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: #0a0a0f;
+}
+
+/* Subtle animated background blobs */
+.home__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.home__blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.12;
+  animation: blobFloat 20s ease-in-out infinite alternate;
+}
+
+.home__blob--1 {
+  width: 500px;
+  height: 500px;
+  background: #e50914;
+  top: -10%;
+  right: -5%;
+  animation-delay: 0s;
+}
+
+.home__blob--2 {
+  width: 400px;
+  height: 400px;
+  background: #b91c1c;
+  bottom: -15%;
+  left: -8%;
+  animation-delay: -7s;
+}
+
+.home__blob--3 {
+  width: 300px;
+  height: 300px;
+  background: #7f1d1d;
+  top: 40%;
+  left: 50%;
+  animation-delay: -14s;
+}
+
+@keyframes blobFloat {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 15px) scale(0.95); }
+  100% { transform: translate(10px, -10px) scale(1.02); }
+}
+
+/* Content */
+.home__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 24px;
+  max-width: 700px;
+}
+
+/* Theater masks logo */
+.home__logo {
+  font-size: 4rem;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 20px rgba(229, 9, 20, 0.3));
+}
+
+/* Brand name */
+.home__brand {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0 0 6px;
+}
+
+.home__brand-accent {
+  color: #e50914;
+}
+
+/* Tagline */
+.home__tagline {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #666;
+  margin: 0 0 48px;
+}
+
+/* Hero heading */
+.home__heading {
+  font-family: 'Space Grotesk', 'Inter', sans-serif;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.15;
+  margin: 0 0 16px;
+}
+
+.home__subheading {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  color: #999;
+  line-height: 1.6;
+  margin: 0 0 40px;
+  max-width: 480px;
+}
+
+/* CTA buttons */
+.home__actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.home__btn {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.home__btn:focus-visible {
+  outline: 2px solid #e50914;
+  outline-offset: 2px;
+}
+
+.home__btn--primary {
+  background: #e50914;
+  color: #fff;
+}
+
+.home__btn--primary:hover {
+  background: #f40612;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(229, 9, 20, 0.4);
+}
+
+.home__btn--secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: #e5e5e5;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.home__btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateY(-1px);
+}
+
+/* AI badge */
+.home__ai-badge {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(229, 9, 20, 0.15);
+  border: 1px solid rgba(229, 9, 20, 0.3);
+  color: #e50914;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  z-index: 2;
+}
+
+.home__ai-badge-icon {
+  font-size: 1rem;
+}
+
+/* Footer note */
+.home__footer {
+  position: absolute;
+  bottom: 20px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  color: #444;
+  z-index: 1;
+}
+
+.home__footer a {
+  color: #666;
+  text-decoration: none;
+}
+
+.home__footer a:hover {
+  color: #e50914;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .home__brand {
+    font-size: 2rem;
+    letter-spacing: 0.08em;
+  }
+
+  .home__heading {
+    font-size: 1.8rem;
+  }
+
+  .home__logo {
+    font-size: 3rem;
+  }
+
+  .home__actions {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 20px;
+  }
+
+  .home__btn {
+    justify-content: center;
+    width: 100%;
+  }
+}

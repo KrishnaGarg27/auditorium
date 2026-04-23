@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+backend/.env
+backend/data/
+backend/temp/
+backend/output/
+backend/cache/
+backend/thumbnails/
+frontend/dist/
+frontend/data/
+*.log

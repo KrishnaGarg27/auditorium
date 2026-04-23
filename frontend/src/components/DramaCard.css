@@ -1,0 +1,116 @@
+/* Netflix-style 9:16 portrait title card */
+.drama-card {
+  all: unset;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #1a1a1a;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.drama-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  z-index: 10;
+}
+
+.drama-card:focus-visible {
+  outline: 2px solid #e50914;
+  outline-offset: 2px;
+}
+
+/* 9:16 portrait aspect ratio like Netflix title cards */
+.drama-card__thumbnail {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  min-height: 240px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 6px;
+}
+
+/* Gradient overlay at bottom for text readability */
+.drama-card__thumbnail::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+  pointer-events: none;
+  border-radius: 0 0 6px 6px;
+}
+
+/* Title overlay at bottom of card */
+.drama-card__overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 10px;
+  z-index: 2;
+}
+
+.drama-card__title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.drama-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.drama-card__badge {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: rgba(229, 9, 20, 0.85);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+.drama-card__episodes {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Status badges */
+.drama-card__status {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 2px;
+  color: #fff;
+  z-index: 3;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.drama-card__status--processing {
+  background: rgba(217, 119, 6, 0.9);
+}
+
+.drama-card__status--failed {
+  background: rgba(220, 38, 38, 0.9);
+}

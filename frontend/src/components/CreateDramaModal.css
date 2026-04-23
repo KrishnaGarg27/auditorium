@@ -1,0 +1,258 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: #181818;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 12px;
+  border-bottom: 1px solid #2d2d3f;
+}
+
+.modal__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #e4e4ef;
+}
+
+.modal__close {
+  all: unset;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #9ca3af;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.modal__close:hover {
+  color: #e4e4ef;
+}
+
+.modal__close:focus-visible {
+  outline: 2px solid #7c6ff7;
+}
+
+.modal__body {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Tabs */
+.modal__tabs {
+  display: flex;
+  gap: 4px;
+  background: #16161e;
+  border-radius: 8px;
+  padding: 3px;
+}
+
+.modal__tab {
+  all: unset;
+  cursor: pointer;
+  flex: 1;
+  text-align: center;
+  padding: 8px 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #9ca3af;
+  border-radius: 6px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.modal__tab--active {
+  background: #2d2d3f;
+  color: #e4e4ef;
+}
+
+.modal__tab:focus-visible {
+  outline: 2px solid #7c6ff7;
+}
+
+/* Fields */
+.modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal__field--row {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal__label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #b0b0c0;
+}
+
+.modal__file-input {
+  font-size: 0.85rem;
+  color: #e4e4ef;
+}
+
+.modal__file-input::file-selector-button {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #2d2d3f;
+  color: #e4e4ef;
+  font-size: 0.82rem;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.modal__file-name {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.modal__textarea {
+  background: #16161e;
+  border: 1px solid #2d2d3f;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  color: #e4e4ef;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.modal__textarea::placeholder {
+  color: #6b7280;
+}
+
+.modal__textarea:focus {
+  outline: none;
+  border-color: #7c6ff7;
+}
+
+.modal__select {
+  background: #16161e;
+  border: 1px solid #2d2d3f;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  color: #e4e4ef;
+  cursor: pointer;
+}
+
+.modal__select:focus {
+  outline: none;
+  border-color: #7c6ff7;
+}
+
+/* Toggle switch */
+.modal__toggle {
+  all: unset;
+  cursor: pointer;
+  width: 44px;
+  height: 24px;
+  border-radius: 12px;
+  background: #3f3f5a;
+  position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.modal__toggle--on {
+  background: #7c6ff7;
+}
+
+.modal__toggle-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+
+.modal__toggle--on .modal__toggle-knob {
+  transform: translateX(20px);
+}
+
+.modal__toggle:focus-visible {
+  outline: 2px solid #7c6ff7;
+  outline-offset: 2px;
+}
+
+.modal__error {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+/* Footer */
+.modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 20px 18px;
+  border-top: 1px solid #2d2d3f;
+}
+
+.modal__btn {
+  all: unset;
+  cursor: pointer;
+  padding: 8px 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.modal__btn:focus-visible {
+  outline: 2px solid #7c6ff7;
+  outline-offset: 2px;
+}
+
+.modal__btn--secondary {
+  color: #9ca3af;
+}
+
+.modal__btn--secondary:hover {
+  background: #2d2d3f;
+}
+
+.modal__btn--primary {
+  color: #fff;
+  background: #7c6ff7;
+}
+
+.modal__btn--primary:hover:not(:disabled) {
+  background: #6558d3;
+}
+
+.modal__btn--primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

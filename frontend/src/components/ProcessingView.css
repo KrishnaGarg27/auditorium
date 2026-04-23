@@ -1,0 +1,139 @@
+.processing {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 48px 20px;
+  text-align: center;
+}
+
+.processing__back-btn {
+  all: unset;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #9ca3af;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+  margin-bottom: 32px;
+  display: inline-block;
+}
+
+.processing__back-btn:hover {
+  background: #1e1e2e;
+  color: #e4e4ef;
+}
+
+.processing__back-btn:focus-visible {
+  outline: 2px solid #7c6ff7;
+  outline-offset: 2px;
+}
+
+.processing__icon {
+  font-size: 2.4rem;
+  margin-bottom: 16px;
+}
+
+.processing__stage-label {
+  margin: 0 0 6px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #e4e4ef;
+}
+
+.processing__stage-detail {
+  margin: 0 0 24px;
+  font-size: 0.88rem;
+  color: #9ca3af;
+  min-height: 1.3em;
+}
+
+/* Progress bar */
+.processing__bar-track {
+  width: 100%;
+  height: 8px;
+  background: #1e1e2e;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.processing__bar-fill {
+  height: 100%;
+  background: #e50914;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.processing__bar-fill--error {
+  background: #e50914;
+}
+
+.processing__bar-fill--complete {
+  background: #46d369;
+}
+
+.processing__percent {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  margin-bottom: 32px;
+}
+
+/* Spinner animation */
+.processing__spinner {
+  display: inline-block;
+  animation: spin 1.2s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error state */
+.processing__error-box {
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-top: 16px;
+  text-align: left;
+}
+
+.processing__error-title {
+  margin: 0 0 6px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #f87171;
+}
+
+.processing__error-message {
+  margin: 0;
+  font-size: 0.84rem;
+  color: #fca5a5;
+  line-height: 1.5;
+}
+
+/* Complete state */
+.processing__complete-btn {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 10px 24px;
+  background: #e50914;
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+
+.processing__complete-btn:hover {
+  background: #f40612;
+}
+
+.processing__complete-btn:focus-visible {
+  outline: 2px solid #7c6ff7;
+  outline-offset: 2px;
+}
