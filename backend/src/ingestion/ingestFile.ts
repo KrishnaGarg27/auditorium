@@ -55,7 +55,9 @@ export async function ingestFile(file: Buffer, filename: string): Promise<StoryI
 
 async function extractPdfText(buffer: Buffer): Promise<string> {
   try {
-    const pdf = (await import('pdf-parse')).default;
+    // pdf-parse exports differently in CJS vs ESM; cast to any to handle both
+    const pdfModule = await import('pdf-parse') as any;
+    const pdf = pdfModule.default ?? pdfModule;
     const data = await pdf(buffer);
     return data.text;
   } catch {
