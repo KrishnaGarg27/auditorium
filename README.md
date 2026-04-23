@@ -173,4 +173,4 @@ This project was developed using [AWS Kiro](https://kiro.dev)'s spec-driven deve
 
 ## License
 
-Private project.
+MIT License — see [LICENSE](LICENSE) for details.
